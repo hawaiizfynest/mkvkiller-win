@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using MKVKiller.Models;
 using MKVKiller.Services;
 
@@ -73,7 +72,7 @@ public partial class MainWindow : Window
         JobManager.Instance.Jobs.CollectionChanged += (_, _) => { if (_currentTab == "jobs" || _currentTab == "log") RenderCurrentTab(); };
 
         // Auto-resume interrupted
-        Dispatcher.BeginInvoke(new Action(() => JobManager.Instance.ResumeInterrupted()), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        _ = Dispatcher.BeginInvoke(new Action(() => JobManager.Instance.ResumeInterrupted()), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
     }
 
     private void UpdateHwPills(EncoderCapabilities caps)
@@ -92,7 +91,7 @@ public partial class MainWindow : Window
     // ---- Theme ----
     private void OnThemeClick(object sender, MouseButtonEventArgs e)
     {
-        if (sender is Ellipse el && el.Tag is string t)
+        if (sender is System.Windows.Shapes.Ellipse el && el.Tag is string t)
         {
             App.ApplyTheme(t);
         }
