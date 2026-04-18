@@ -242,6 +242,26 @@ public class JobManager
         }
     }
 
+    public void Shutdown()
+    {
+        // Cancel all running/queued jobs
+        foreach (var cts in _cts.Values)
+        {
+            try { cts.Cancel(); } catch { }
+        }
+
+        // Mark running jobs as interrupted (resumable) or error
+        foreach (var j in Jobs.Where(j => j.Status == JobStatus.Running || j.Status == JobStatus.Queued))
+        {
+            j.Status = j.Resumable ? JobStatus.Interrupted : JobStatus.Cancelled;
+            j.FinishedAt = DateTime.Now;
+            LogDatabase.Upsert(j);
+        }
+
+        // Kill any lingering ffmpeg processes
+        FFmpegService.KillAll();
+    }
+
     public void Remove(string id)
     {
         var j = Jobs.FirstOrDefault(x => x.Id == id);

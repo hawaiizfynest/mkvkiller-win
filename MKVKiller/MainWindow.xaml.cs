@@ -91,6 +91,11 @@ public partial class MainWindow : Window
         _ = Dispatcher.BeginInvoke(new Action(() => JobManager.Instance.ResumeInterrupted()), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
     }
 
+    private void Window_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+    {
+        JobManager.Instance.Shutdown();
+    }
+
     private void UpdateHwPills(EncoderCapabilities caps)
     {
         void SetPill(Border pill, bool on)

@@ -135,6 +135,18 @@ public static class FFmpegService
         if (sm.Success) speed = double.Parse(sm.Groups[1].Value, System.Globalization.CultureInfo.InvariantCulture);
     }
 
+    // Track active ffmpeg processes for cleanup on app exit
+    private static readonly System.Collections.Concurrent.ConcurrentDictionary<int, Process> ActiveProcesses = new();
+
+    public static void KillAll()
+    {
+        foreach (var kvp in ActiveProcesses)
+        {
+            try { if (!kvp.Value.HasExited) kvp.Value.Kill(entireProcessTree: true); } catch { }
+        }
+        ActiveProcesses.Clear();
+    }
+
     public static async Task<int> RunAsync(IEnumerable<string> args, Action<string> onStderrLine,
         Process? captureProc = null, CancellationToken ct = default)
     {
@@ -158,6 +170,7 @@ public static class FFmpegService
             }
         };
         proc.Start();
+        ActiveProcesses[proc.Id] = proc;
         proc.BeginErrorReadLine();
 
         using var reg = ct.Register(() => { try { if (!proc.HasExited) proc.Kill(); } catch { } });
@@ -166,6 +179,7 @@ public static class FFmpegService
             await proc.WaitForExitAsync(ct);
         }
         catch (OperationCanceledException) { }
+        ActiveProcesses.TryRemove(proc.Id, out _);
         return proc.HasExited ? proc.ExitCode : -1;
     }
 }
