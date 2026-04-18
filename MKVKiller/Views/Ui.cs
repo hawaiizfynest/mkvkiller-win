@@ -1,11 +1,27 @@
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 namespace MKVKiller.Views;
 
 internal static class Ui
 {
+    [DllImport("dwmapi.dll", PreserveSig = true)]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int value, int size);
+
+    public static void ApplyDarkTitleBar(Window win)
+    {
+        try
+        {
+            var hwnd = new WindowInteropHelper(win).EnsureHandle();
+            int darkMode = 1;
+            DwmSetWindowAttribute(hwnd, 20, ref darkMode, sizeof(int));
+        }
+        catch { }
+    }
+
     public static Brush Res(string key) => (Brush)Application.Current.FindResource(key);
 
     public static TextBlock H2(string text) => new()

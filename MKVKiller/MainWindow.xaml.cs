@@ -1,10 +1,12 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using MKVKiller.Models;
 using MKVKiller.Services;
@@ -13,6 +15,11 @@ namespace MKVKiller;
 
 public partial class MainWindow : Window
 {
+    // Win32: force dark title bar on Windows 10 1809+ / Windows 11
+    [DllImport("dwmapi.dll", PreserveSig = true)]
+    private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int value, int size);
+    private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+
     private string _currentPath = "";
     private string _sortMode = "name";
     private readonly ObservableCollection<FileListItem> _files = new();
@@ -29,6 +36,15 @@ public partial class MainWindow : Window
 
     private async void Window_Loaded(object sender, RoutedEventArgs e)
     {
+        // Force dark title bar
+        try
+        {
+            var hwnd = new WindowInteropHelper(this).Handle;
+            int darkMode = 1;
+            DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ref darkMode, sizeof(int));
+        }
+        catch { /* pre-1809 Windows, ignore */ }
+
         _sortMode = Preferences.Current.SortMode;
         SourceFolderText.Text = Preferences.Current.LastInputFolder ?? "";
         OutputFolderText.Text = Preferences.Current.LastOutputFolder ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), "MKVKiller");

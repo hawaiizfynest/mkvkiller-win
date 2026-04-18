@@ -157,6 +157,7 @@ internal static class JobsView
                 Padding = new Thickness(14)
             };
             win.Content = tb;
+            Ui.ApplyDarkTitleBar(win);
             win.Show();
         }, small: true, ghost: true));
         sp.Children.Add(btns);
@@ -319,6 +320,7 @@ internal static class LogView
                 };
                 inner.Children.Add(logTb);
                 win.Content = sv;
+                Ui.ApplyDarkTitleBar(win);
                 win.Show();
             };
             root.Children.Add(row);
