@@ -45,8 +45,7 @@ internal static class Ui
         var b = new Border
         {
             Background = Res("Panel2Brush"),
-            BorderBrush = Res("BorderBrush"),
-            BorderThickness = new Thickness(1),
+            BorderThickness = new Thickness(0),
             CornerRadius = new CornerRadius(10),
             Padding = pad ?? new Thickness(16),
             Margin = new Thickness(0, 0, 0, 14),
