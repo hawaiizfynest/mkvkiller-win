@@ -1,0 +1,194 @@
+<Window x:Class="MKVKiller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MKVKiller" Height="800" Width="1280" MinHeight="600" MinWidth="1000"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="20,14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="MKV" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="Killer" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource Accent2Brush}"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Ellipse Width="20" Height="20" Fill="#5B8CFF" Stroke="{DynamicResource BorderBrush}" StrokeThickness="2" Cursor="Hand" Margin="4,0" MouseLeftButtonUp="OnThemeClick" Tag="blue"/>
+                    <Ellipse Width="20" Height="20" Fill="#FF4D5C" Stroke="{DynamicResource BorderBrush}" StrokeThickness="2" Cursor="Hand" Margin="4,0" MouseLeftButtonUp="OnThemeClick" Tag="red"/>
+                    <Ellipse Width="20" Height="20" Fill="#3ECF8E" Stroke="{DynamicResource BorderBrush}" StrokeThickness="2" Cursor="Hand" Margin="4,0" MouseLeftButtonUp="OnThemeClick" Tag="green"/>
+                    <Border Width="1" Height="20" Background="{DynamicResource BorderBrush}" Margin="8,0"/>
+                    <Border x:Name="PillCpu" Background="{DynamicResource Panel2Brush}" BorderBrush="{DynamicResource GoodBrush}" BorderThickness="1" CornerRadius="10" Padding="8,3" Margin="4,0">
+                        <TextBlock Text="CPU" FontSize="11" Foreground="{DynamicResource GoodBrush}"/>
+                    </Border>
+                    <Border x:Name="PillQsv" Background="{DynamicResource Panel2Brush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="8,3" Margin="4,0">
+                        <TextBlock Text="QSV" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                    </Border>
+                    <Border x:Name="PillNvenc" Background="{DynamicResource Panel2Brush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="10" Padding="8,3" Margin="4,0">
+                        <TextBlock Text="NVENC" FontSize="11" Foreground="{DynamicResource MutedBrush}"/>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="420" MinWidth="320"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Background="{DynamicResource PanelBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="10,8">
+                    <StackPanel>
+                        <TextBlock Text="SOURCE FOLDER" Style="{StaticResource SectionHeader}" FontSize="10"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="SourceFolderText" FontSize="12" KeyDown="SourceFolderText_KeyDown"/>
+                            <Button Grid.Column="1" Content="📁" Style="{StaticResource SmallGhostButton}" Margin="4,0,0,0" Click="BrowseSource_Click"/>
+                            <Button Grid.Column="2" Content="Go" Style="{StaticResource SmallGhostButton}" Margin="4,0,0,0" Click="GoSource_Click"/>
+                        </Grid>
+                        <TextBlock Text="OUTPUT FOLDER" Style="{StaticResource SectionHeader}" FontSize="10" Margin="0,8,0,0"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="OutputFolderText" FontSize="12"/>
+                            <Button Grid.Column="1" Content="📁" Style="{StaticResource SmallGhostButton}" Margin="4,0,0,0" Click="BrowseOutput_Click"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="1" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="10,6">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Select all" Style="{StaticResource SmallGhostButton}" Click="SelectAll_Click"/>
+                        <Button Grid.Column="1" Content="Clear" Style="{StaticResource SmallGhostButton}" Margin="4,0,0,0" Click="ClearQueue_Click"/>
+                        <Button Grid.Column="2" x:Name="BatchBtn" Content="Batch → 0" Style="{StaticResource SuccessButton}" Padding="9,5" FontSize="11" Margin="4,0,0,0" Click="BatchTab_Click" Visibility="Collapsed"/>
+                        <TextBlock Grid.Column="3" x:Name="QueueCountText" Foreground="{DynamicResource MutedBrush}" FontSize="11" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Row="2" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="10,6">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Sort:" Foreground="{DynamicResource MutedBrush}" FontSize="11" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <RadioButton x:Name="SortNameBtn" Content="Name" GroupName="Sort" IsChecked="True" Style="{StaticResource TabStyle}" Padding="8,3" FontSize="11" Click="Sort_Click" Tag="name"/>
+                        <RadioButton x:Name="SortSizeDescBtn" Content="Size ↓" GroupName="Sort" Style="{StaticResource TabStyle}" Padding="8,3" FontSize="11" Click="Sort_Click" Tag="size-desc"/>
+                        <RadioButton x:Name="SortSizeAscBtn" Content="Size ↑" GroupName="Sort" Style="{StaticResource TabStyle}" Padding="8,3" FontSize="11" Click="Sort_Click" Tag="size-asc"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="3" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="10,6">
+                    <TextBlock x:Name="CurrentPathText" Foreground="{DynamicResource MutedBrush}" FontSize="11" TextTrimming="CharacterEllipsis"/>
+                </Border>
+
+                <ListBox x:Name="FileListBox" Grid.Row="4" Background="Transparent" BorderThickness="0"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         SelectionChanged="FileListBox_SelectionChanged">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="10,6">
+                                            <ContentPresenter/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Panel2Brush}"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentGlowBrush}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0" IsChecked="{Binding IsQueued, Mode=TwoWay}"
+                                          Visibility="{Binding IsMedia, Converter={StaticResource BoolToVis}}"
+                                          Margin="0,0,6,0" VerticalAlignment="Center"
+                                          Click="FileItem_CheckChanged"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Icon}" Margin="2,0,6,0" FontSize="13"/>
+                                <TextBlock Grid.Column="2" Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontSize="13" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Text="{Binding SizeText}" Foreground="{DynamicResource MutedBrush}" FontSize="11" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+
+            <GridSplitter Grid.Column="1" Background="{DynamicResource BorderBrush}" HorizontalAlignment="Stretch"/>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20,14,20,0">
+                    <RadioButton x:Name="ConvertTabBtn" Content="Convert" GroupName="Tabs" IsChecked="True" Style="{StaticResource TabStyle}" Click="Tab_Click" Tag="convert"/>
+                    <RadioButton x:Name="BatchTabBtn" Content="Batch" GroupName="Tabs" Style="{StaticResource TabStyle}" Click="Tab_Click" Tag="batch"/>
+                    <RadioButton x:Name="JobsTabBtn" Content="Jobs" GroupName="Tabs" Style="{StaticResource TabStyle}" Click="Tab_Click" Tag="jobs"/>
+                    <RadioButton x:Name="LogTabBtn" Content="Log" GroupName="Tabs" Style="{StaticResource TabStyle}" Click="Tab_Click" Tag="log"/>
+                </StackPanel>
+
+                <ScrollViewer Grid.Row="1" Padding="20" VerticalScrollBarVisibility="Auto">
+                    <ContentControl x:Name="TabContent"/>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="2" Background="{DynamicResource PanelBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="20,6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="StatusText" Foreground="{DynamicResource MutedBrush}" FontSize="11" VerticalAlignment="Center"/>
+                <TextBlock x:Name="FFmpegStatusText" Grid.Column="1" Foreground="{DynamicResource MutedBrush}" FontSize="11"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
