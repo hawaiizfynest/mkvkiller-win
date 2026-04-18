@@ -8,15 +8,15 @@ $ffmpegDir = Join-Path $root "MKVKiller\ffmpeg"
 
 Write-Host "=== MKVKiller Build Script ===" -ForegroundColor Cyan
 
-# 1. Download ffmpeg (gyan.dev essentials build - small, Windows x64)
+# 1. Download ffmpeg (BtbN builds on GitHub - reliable in CI)
 if (-not (Test-Path (Join-Path $ffmpegDir "ffmpeg.exe"))) {
     Write-Host "Downloading ffmpeg..." -ForegroundColor Yellow
     $tmp = Join-Path $env:TEMP "mkvkiller-ffmpeg"
     New-Item -ItemType Directory -Force -Path $tmp | Out-Null
     $zipPath = Join-Path $tmp "ffmpeg.zip"
 
-    # gyan.dev "essentials" build - about 35 MB compressed
-    $url = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip"
+    # BtbN GPL build from GitHub (works in CI, ~80 MB compressed)
+    $url = "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl.zip"
     Write-Host "  From: $url" -ForegroundColor Gray
     Invoke-WebRequest -Uri $url -OutFile $zipPath -UseBasicParsing
 
