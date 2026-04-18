@@ -314,6 +314,12 @@
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
 
+    <!-- ============ SCROLLVIEWER (dark) ============ -->
+    <Style TargetType="ScrollViewer">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
     <!-- ============ NAMED STYLES ============ -->
     <Style x:Key="Panel" TargetType="Border">
         <Setter Property="Background" Value="{DynamicResource Panel2Brush}"/>

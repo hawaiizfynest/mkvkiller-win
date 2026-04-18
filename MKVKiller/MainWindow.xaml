@@ -174,7 +174,7 @@
                     <RadioButton x:Name="LogTabBtn" Content="Log" GroupName="Tabs" Style="{StaticResource TabStyle}" Click="Tab_Click" Tag="log"/>
                 </StackPanel>
 
-                <ScrollViewer Grid.Row="1" Padding="20" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="1" Padding="20" VerticalScrollBarVisibility="Auto" Background="Transparent" BorderThickness="0" Focusable="False">
                     <ContentControl x:Name="TabContent"/>
                 </ScrollViewer>
             </Grid>
